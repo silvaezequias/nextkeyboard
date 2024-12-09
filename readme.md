@@ -239,7 +239,7 @@ F1.onPress(() => console.log("F1 was pressed!"));
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/nextkeyboard.git
+   git clone https://github.com/silvaezequias/nextkeyboard.git
    ```
 
 2. Install dependencies:
@@ -261,7 +261,3 @@ F1.onPress(() => console.log("F1 was pressed!"));
 ## **License**
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
-
----
-
-This version includes the updated usage for importing predefined keys via `Keyboard`. Let me know if you need additional adjustments! 😊
