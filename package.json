@@ -1,7 +1,7 @@
 {
   "name": "nextkeyboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "A flexible library for keyboard event handling in React and TypeScript projects.",
   "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc && tsc-alias"
@@ -10,10 +10,20 @@
     "react",
     "keyboard",
     "event",
-    "hotkey"
+    "hotkey",
+    "typescript",
+    "global-listener"
   ],
-  "author": "",
+  "author": "Ezequias Silva <ezequiaslopesdev@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/silvaezequias/nextkeyboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/silvaezequias/nextkeyboard/issues"
+  },
+  "homepage": "https://github.com/silvaezequias/nextkeyboard#readme",
   "devDependencies": {
     "@types/node": "^22.10.1",
     "tsc-alias": "^1.8.10",
