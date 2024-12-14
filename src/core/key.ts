@@ -1,4 +1,7 @@
-import { C } from "@/keyboard";
+type TKey = { key: string };
+type TCode = { code: string };
+
+type KeyProps = (TKey & Partial<TCode>) | (TCode & Partial<TKey>);
 
 export class Key {
   public key: string;
@@ -9,7 +12,7 @@ export class Key {
   private stateChangeListener?: (state: boolean) => void;
   private previousState: boolean = false;
 
-  constructor({ key, code }: { key: string; code: string }) {
+  constructor({ key = "", code = "" }: KeyProps) {
     this.key = key;
     this.code = code;
     this.initListeners();
@@ -27,7 +30,7 @@ export class Key {
 
   private handleKeyDown = (event: KeyboardEvent) => {
     if (
-      (event.key === this.key || event.code === this.code) &&
+      (event.code === this.code || event.key === this.key) &&
       !this.isPressed
     ) {
       this.isPressed = true;
@@ -36,7 +39,7 @@ export class Key {
   };
 
   private handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key === this.key || event.code === this.code) {
+    if (event.code === this.code || event.key === this.key) {
       this.isPressed = false;
       this.onReleaseCallback?.(event, this);
     }
