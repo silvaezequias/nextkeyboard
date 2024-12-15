@@ -4,7 +4,8 @@
   "description": "A flexible library for keyboard event handling in React and TypeScript projects.",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "tsc && tsc-alias"
+    "build": "tsc && tsc-alias",
+    "test": "jest"
   },
   "keywords": [
     "react",
@@ -25,11 +26,17 @@
   },
   "homepage": "https://github.com/silvaezequias/nextkeyboard#readme",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.1",
+    "jest": "^29.7.0",
+    "jsdom": "^25.0.1",
+    "ts-jest": "^29.2.5",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@jest/globals": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
