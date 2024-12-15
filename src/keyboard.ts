@@ -1,4 +1,4 @@
-import { Key } from "@/core/key";
+import { Key } from "./core/key";
 
 export const A = new Key({ key: "a", code: "KeyA" });
 export const B = new Key({ key: "b", code: "KeyB" });
@@ -81,7 +81,9 @@ export const NumberKeys = {
 };
 
 export const LeftCTRL = new Key({ key: "Control", code: "ControlLeft" });
+export const LeftControl = new Key({ key: "Control", code: "ControlLeft" });
 export const RightCTRL = new Key({ key: "Control", code: "ControlRight" });
+export const RightControl = new Key({ key: "Control", code: "ControlRight" });
 export const LeftShift = new Key({ key: "Shift", code: "ShiftLeft" });
 export const RightShift = new Key({ key: "Shift", code: "ShiftRight" });
 export const LeftAlt = new Key({ key: "Alt", code: "AltLeft" });
@@ -91,7 +93,9 @@ export const RightCommand = new Key({ key: "Meta", code: "MetaRight" });
 
 export const ModifierKeys = {
   LeftCTRL,
+  LeftControl,
   RightCTRL,
+  RightControl,
   LeftShift,
   RightShift,
   LeftAlt,
