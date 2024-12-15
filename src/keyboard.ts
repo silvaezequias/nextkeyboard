@@ -1,6 +1,5 @@
 import { Key } from "@/core/key";
 
-// Letras
 export const A = new Key({ key: "a", code: "KeyA" });
 export const B = new Key({ key: "b", code: "KeyB" });
 export const C = new Key({ key: "c", code: "KeyC" });
@@ -57,7 +56,6 @@ export const LetterKeys = {
   Z,
 };
 
-// Números
 export const Zero = new Key({ key: "0", code: "Digit0" });
 export const One = new Key({ key: "1", code: "Digit1" });
 export const Two = new Key({ key: "2", code: "Digit2" });
@@ -82,7 +80,6 @@ export const NumberKeys = {
   Nine,
 };
 
-// Modificadores
 export const LeftCTRL = new Key({ key: "Control", code: "ControlLeft" });
 export const RightCTRL = new Key({ key: "Control", code: "ControlRight" });
 export const LeftShift = new Key({ key: "Shift", code: "ShiftLeft" });
@@ -103,7 +100,6 @@ export const ModifierKeys = {
   RightCommand,
 };
 
-// Navegação e Estado
 export const Enter = new Key({ key: "Enter", code: "Enter" });
 export const Backspace = new Key({ key: "Backspace", code: "Backspace" });
 export const Escape = new Key({ key: "Escape", code: "Escape" });
@@ -144,7 +140,6 @@ export const NavigationKeys = {
   PauseBreak,
 };
 
-// Funções
 export const F1 = new Key({ key: "F1", code: "F1" });
 export const F2 = new Key({ key: "F2", code: "F2" });
 export const F3 = new Key({ key: "F3", code: "F3" });

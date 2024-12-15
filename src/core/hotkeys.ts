@@ -61,8 +61,8 @@ export class Hotkeys {
   }
 
   private areAllConditionsMet(): boolean {
-    return this.items.every(
-      (item) => (item instanceof Key ? item.isKeyPressed() : item.isPressed()) // Usando lógica de SomeOfKeys
+    return this.items.every((item) =>
+      item instanceof Key ? item.isKeyPressed() : item.isPressed()
     );
   }
 
