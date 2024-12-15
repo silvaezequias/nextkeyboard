@@ -5,39 +5,69 @@ type HotkeyItem = Key | SomeOfKeys;
 
 export class Hotkeys {
   private items: HotkeyItem[];
-  private onPressCallback?: () => void;
-  private onReleaseCallback?: () => void;
+  private onPressCallback?: (event: KeyboardEvent, keysInOrder: Key[]) => void;
+  private onReleaseCallback?: (
+    event: KeyboardEvent,
+    keysInOrder: Key[]
+  ) => void;
+  private onLongPressCallback?: (
+    event: KeyboardEvent,
+    keysInOrder: Key[]
+  ) => void;
+  private pressedKeys: Key[] = [];
+  private longPressTimer: NodeJS.Timeout | null = null;
+  private longPressDuration: number = 500;
 
   constructor(items: HotkeyItem[]) {
     this.items = items;
     this.initListeners();
   }
 
-  private handleKeyDown = () => {
+  private handleKeyDown = (event: KeyboardEvent, key?: Key) => {
+    if (key && !this.pressedKeys.includes(key)) {
+      this.pressedKeys.push(key);
+    }
+
     if (this.areAllConditionsMet()) {
-      this.onPressCallback?.();
+      if (!this.longPressTimer) {
+        this.longPressTimer = setTimeout(() => {
+          this.onLongPressCallback?.(event, [...this.pressedKeys]);
+        }, this.longPressDuration);
+      }
+      this.onPressCallback?.(event, [...this.pressedKeys]);
     }
   };
 
-  private handleKeyUp = () => {
+  private handleKeyUp = (event: KeyboardEvent, key?: Key) => {
+    if (key) {
+      this.pressedKeys = this.pressedKeys.filter(
+        (pressedKey) => pressedKey !== key
+      );
+    }
+
+    if (this.longPressTimer) {
+      clearTimeout(this.longPressTimer);
+      this.longPressTimer = null;
+    }
+
     if (!this.areAllConditionsMet()) {
-      this.onReleaseCallback?.();
+      this.onReleaseCallback?.(event, [...this.pressedKeys]);
     }
   };
 
   private initListeners() {
     this.items.forEach((item) => {
       if (item instanceof Key) {
-        item.onPress(() => this.handleKeyDown());
-        item.onRelease(() => this.handleKeyUp());
+        item.onPress((event, key) => this.handleKeyDown(event, key));
+        item.onRelease((event, key) => this.handleKeyUp(event, key));
       } else if (item instanceof SomeOfKeys) {
-        item.onPress(() => this.handleKeyDown());
-        item.onRelease(() => this.handleKeyUp());
+        item.onPress((event, key) => this.handleKeyDown(event, key));
+        item.onRelease((event, key) => this.handleKeyUp(event, key));
       }
     });
   }
 
-  private destroyListeners() {
+  resetListeners() {
     this.items.forEach((item) => {
       if (item instanceof Key) {
         item.resetListeners();
@@ -45,19 +75,34 @@ export class Hotkeys {
         item.resetListeners();
       }
     });
-  }
-
-  resetListeners() {
-    this.destroyListeners();
     this.initListeners();
   }
 
-  onPress(callback: () => void) {
+  onPress(callback: (event: KeyboardEvent, keysInOrder: Key[]) => void) {
     this.onPressCallback = callback;
   }
 
-  onRelease(callback: () => void) {
+  onRelease(callback: (event: KeyboardEvent, keysInOrder: Key[]) => void) {
     this.onReleaseCallback = callback;
+  }
+
+  onLongPress(
+    callback: (event: KeyboardEvent, keysInOrder: Key[]) => void,
+    duration: number = 500
+  ) {
+    this.onLongPressCallback = callback;
+    this.longPressDuration = duration;
+
+    return {
+      after: (afterCallback: () => void): this => {
+        const wrappedCallback = this.onLongPressCallback;
+        this.onLongPressCallback = (event, keysInOrder) => {
+          wrappedCallback?.(event, keysInOrder);
+          afterCallback();
+        };
+        return this;
+      },
+    };
   }
 
   private areAllConditionsMet(): boolean {
@@ -67,6 +112,10 @@ export class Hotkeys {
   }
 
   cleanup() {
-    this.destroyListeners();
+    this.items.forEach((item) => {
+      if (item instanceof Key || item instanceof SomeOfKeys) {
+        item.resetListeners();
+      }
+    });
   }
 }
