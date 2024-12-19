@@ -1,6 +1,6 @@
 {
   "name": "nextkeyboard",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A flexible library for keyboard event handling in React and TypeScript projects.",
   "main": "dist/src/index.js",
   "scripts": {
