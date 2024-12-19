@@ -1,4 +1,5 @@
 import { Key } from "./key";
+import { getWindow } from "./browser";
 
 export class GlobalKeyboardListener {
   private onKeydownCallback?: (
@@ -25,15 +26,6 @@ export class GlobalKeyboardListener {
 
   constructor() {
     this.initListeners();
-  }
-
-  private _getWindow(): Window {
-    if (typeof window === "undefined") {
-      throw new Error(
-        "The 'nextkeyboard' library can only be used in a browser environment. Ensure your Next.js component is client-side by adding 'use client' at the top of your file."
-      );
-    }
-    return window;
   }
 
   private handleKeyDown = (event: KeyboardEvent) => {
@@ -75,15 +67,21 @@ export class GlobalKeyboardListener {
   };
 
   private initListeners() {
-    const win = this._getWindow();
-    win.addEventListener("keydown", this.handleKeyDown);
-    win.addEventListener("keyup", this.handleKeyUp);
+    const win = getWindow();
+
+    if (win) {
+      win.addEventListener("keydown", this.handleKeyDown);
+      win.addEventListener("keyup", this.handleKeyUp);
+    }
   }
 
   private destroyListeners() {
-    const win = this._getWindow();
-    win.removeEventListener("keydown", this.handleKeyDown);
-    win.removeEventListener("keyup", this.handleKeyUp);
+    const win = getWindow();
+
+    if (win) {
+      win.removeEventListener("keydown", this.handleKeyDown);
+      win.removeEventListener("keyup", this.handleKeyUp);
+    }
   }
 
   resetListeners() {

@@ -1,3 +1,5 @@
+import { getWindow } from "./browser";
+
 type TKey = { key: string };
 type TCode = { code: string };
 
@@ -22,15 +24,6 @@ export class Key {
     this.initListeners();
     this.id = `${key || code}:${code || key}`;
     this.previousState = this.getState();
-  }
-
-  private _getWindow(): Window {
-    if (typeof window === "undefined") {
-      throw new Error(
-        "The 'nextkeyboard' library can only be used in a browser environment. Ensure your Next.js component is client-side by adding 'use client' at the top of your file."
-      );
-    }
-    return window;
   }
 
   private handleKeyDown = (event: KeyboardEvent) => {
@@ -58,17 +51,23 @@ export class Key {
   };
 
   private initListeners() {
-    const win = this._getWindow();
-    win.addEventListener("keydown", this.handleKeyDown);
-    win.addEventListener("keyup", this.handleKeyUp);
-    this.initStateChangeListener();
+    const win = getWindow();
+
+    if (win) {
+      win.addEventListener("keydown", this.handleKeyDown);
+      win.addEventListener("keyup", this.handleKeyUp);
+      this.initStateChangeListener(win);
+    }
   }
 
   private destroyListeners() {
-    const win = this._getWindow();
-    win.removeEventListener("keydown", this.handleKeyDown);
-    win.removeEventListener("keyup", this.handleKeyUp);
-    this.destroyStateChangeListener();
+    const win = getWindow();
+
+    if (win) {
+      win.removeEventListener("keydown", this.handleKeyDown);
+      win.removeEventListener("keyup", this.handleKeyUp);
+      this.destroyStateChangeListener(win);
+    }
   }
 
   resetListeners() {
@@ -109,16 +108,21 @@ export class Key {
   }
 
   getState(): boolean {
-    const event = new KeyboardEvent("keydown");
-    return event.getModifierState(this.key);
+    const win = getWindow();
+
+    if (win) {
+      const event = new window.KeyboardEvent("keydown");
+      return event.getModifierState(this.key);
+    } else {
+      return false;
+    }
   }
 
   onStateChange(callback: (state: boolean) => void) {
     this.stateChangeListener = callback;
   }
 
-  private initStateChangeListener() {
-    const win = this._getWindow();
+  private initStateChangeListener(win: Window) {
     const checkState = () => {
       const currentState = this.getState();
       if (currentState !== this.previousState) {
@@ -126,12 +130,12 @@ export class Key {
         this.stateChangeListener?.(currentState);
       }
     };
+
     win.addEventListener("keydown", checkState);
     win.addEventListener("keyup", checkState);
   }
 
-  private destroyStateChangeListener() {
-    const win = this._getWindow();
+  private destroyStateChangeListener(win: Window) {
     win.removeEventListener("keydown", () => {});
     win.removeEventListener("keyup", () => {});
   }
